@@ -2,11 +2,12 @@
 #![allow(unused_parens)]
 #![allow(unused_must_use)]
 
+use colored::Colorize;
 use std::io::{stdout, Write};
 
 fn shell_prompt() {
     let user = std::env::var("USER").expect("Unable to find USER env var");
-    print!("> {} $ ", user);
+    print!("{} $ ", user.blue());
 }
 
 fn shell_input() {
@@ -27,8 +28,27 @@ fn shell_input() {
 
 fn ls() {
     let read_dir = std::fs::read_dir("./").expect("Unable to read the current working directory");
+
+    let mut i: u32 = 0;
     for file in read_dir {
-        print!("{}\n", file.unwrap().path().display());
+        i += 1;
+        print!(
+            "{}\t",
+            file.unwrap()
+                .path()
+                .display()
+                .to_string()
+                .strip_prefix("./")
+                .expect("Error: Failed to output file")
+        );
+
+        if (i % 3 == 0) {
+            println!("");
+        }
+    }
+
+    if (i % 3 != 0) {
+        println!("");
     }
 }
 
