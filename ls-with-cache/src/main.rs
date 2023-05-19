@@ -15,6 +15,21 @@ fn shell_input() {
     std::io::stdin()
         .read_line(&mut input)
         .expect("Error: Unable to take input from user");
+
+    let input = input
+        .strip_suffix("\n")
+        .expect("Error: Failed to parse the input");
+
+    if (input == "ls") {
+        ls();
+    }
+}
+
+fn ls() {
+    let read_dir = std::fs::read_dir("./").expect("Unable to read the current working directory");
+    for file in read_dir {
+        print!("{}\n", file.unwrap().path().display());
+    }
 }
 
 fn main() {
