@@ -6,8 +6,15 @@ use colored::Colorize;
 use std::io::{stdout, Write};
 
 fn shell_prompt() {
-    let user = std::env::var("USER").expect("Unable to find USER env var");
-    print!("{} $ ", user.blue());
+    let user = std::env::var("USER").expect("Error: Unable to find USER env var");
+    let cwd = std::env::current_dir()
+        .expect("Error: Unable to access CWD")
+        .display()
+        .to_string();
+    let cwd_tokens: Vec<&str> = cwd.split("/").collect();
+    let cwd_tail = cwd_tokens[cwd_tokens.len() - 1];
+
+    print!("{} {} $ ", user.magenta(), cwd_tail.blue());
 }
 
 fn shell_input() {
