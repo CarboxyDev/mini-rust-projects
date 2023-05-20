@@ -1,5 +1,6 @@
 #![allow(unused_parens)]
 
+use colored::Colorize;
 use std::env;
 use std::time::SystemTime;
 
@@ -10,7 +11,7 @@ fn benchmark_function() {
     }
 }
 
-fn do_benchmark() -> f32 {
+fn do_benchmark(benchmark_number: u64) -> f32 {
     let now = SystemTime::now();
 
     benchmark_function();
@@ -18,7 +19,12 @@ fn do_benchmark() -> f32 {
     let end = now
         .elapsed()
         .expect("Error: Unable to record the benchmark. The final result may be inaccurate due to this error.");
-    println!("Time taken: {}", end.as_secs_f32());
+
+    println!(
+        "[{}] Time taken: {}",
+        format!("B{}", benchmark_number).blue(),
+        end.as_secs_f32()
+    );
     return end.as_secs_f32();
 }
 fn main() {
@@ -41,8 +47,8 @@ fn main() {
     let mut all_benchmarks: Vec<f32> = vec![];
     println!("[!] Running the Benchmark {} times", benchmark_count);
     println!("---------------------------------------------------------------\n");
-    for _i in 0..benchmark_count {
-        let benchmark_time: f32 = do_benchmark();
+    for i in 1..benchmark_count + 1 {
+        let benchmark_time: f32 = do_benchmark(i);
         all_benchmarks.push(benchmark_time);
     }
 
