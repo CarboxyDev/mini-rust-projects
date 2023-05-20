@@ -8,35 +8,31 @@ fn benchmark_function() {
     }
 }
 
-fn do_benchmark(times: u64) -> f32 {
+fn do_benchmark() -> f32 {
     let now = SystemTime::now();
-    for _i in 0..times {
-        benchmark_function();
-    }
+
+    benchmark_function();
 
     let end = now
         .elapsed()
-        .expect("Error: Unable to record the benchmark. The benchmark result may be inaccurate.");
+        .expect("Error: Unable to record the benchmark. The final result may be inaccurate due to this error.");
     println!("Time taken: {}", end.as_secs_f32());
     return end.as_secs_f32();
 }
 fn main() {
     const BENCHMARK_COUNT: u64 = 10; // Number of times the benchmark should be timed
-    const EACH_BENCHMARK_TIMES: u64 = 1; // Number of times the benchmark function should be ran in each timed benchmark
     let mut all_benchmarks: Vec<f32> = vec![];
+    println!("---------------------------------------------------------------");
     println!("[!] Doing the Benchmark {} times", BENCHMARK_COUNT);
-    println!(
-        "[!] Running the benchmark function in each Benchmark {} times",
-        EACH_BENCHMARK_TIMES
-    );
+    println!("---------------------------------------------------------------\n");
     for _i in 0..BENCHMARK_COUNT {
-        let benchmark_time: f32 = do_benchmark(EACH_BENCHMARK_TIMES);
+        let benchmark_time: f32 = do_benchmark();
         all_benchmarks.push(benchmark_time);
     }
 
     if (BENCHMARK_COUNT > 1) {
         let avg_benchmark_time: f32 = all_benchmarks.iter().sum::<f32>() / (BENCHMARK_COUNT as f32);
-        println!("---------------------------------------------------------------");
+        println!("\n---------------------------------------------------------------");
         println!("Average benchmark time: {}", avg_benchmark_time);
         println!("---------------------------------------------------------------");
     }
