@@ -1,3 +1,8 @@
 {
-    "name": "CarboxyDev"
+    "html": [
+        {
+            "head": [{ "title": "JSON to HTML" }]
+        },
+        { "body": {} }
+    ]
 }
