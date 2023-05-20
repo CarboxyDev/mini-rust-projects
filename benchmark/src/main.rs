@@ -1,4 +1,6 @@
 #![allow(unused_parens)]
+
+use std::env;
 use std::time::SystemTime;
 
 fn benchmark_function() {
@@ -20,18 +22,32 @@ fn do_benchmark() -> f32 {
     return end.as_secs_f32();
 }
 fn main() {
-    const BENCHMARK_COUNT: u64 = 10; // Number of times the benchmark should be timed
-    let mut all_benchmarks: Vec<f32> = vec![];
+    let mut args: Vec<String> = env::args().collect();
+    args.remove(0);
+
+    let benchmark_count: u64; // Number of times the benchmark should be timed
     println!("---------------------------------------------------------------");
-    println!("[!] Doing the Benchmark {} times", BENCHMARK_COUNT);
+
+    if (args.len() == 0) {
+        println!("[!] Running on default setting");
+        benchmark_count = 10;
+    } else if (args[0].bytes().all(|c| c.is_ascii_digit())) {
+        benchmark_count = args[0].parse::<u64>().unwrap()
+    } else {
+        println!("[!] You provided an incorrect argument. Running on default setting");
+        benchmark_count = 10;
+    }
+
+    let mut all_benchmarks: Vec<f32> = vec![];
+    println!("[!] Running the Benchmark {} times", benchmark_count);
     println!("---------------------------------------------------------------\n");
-    for _i in 0..BENCHMARK_COUNT {
+    for _i in 0..benchmark_count {
         let benchmark_time: f32 = do_benchmark();
         all_benchmarks.push(benchmark_time);
     }
 
-    if (BENCHMARK_COUNT > 1) {
-        let avg_benchmark_time: f32 = all_benchmarks.iter().sum::<f32>() / (BENCHMARK_COUNT as f32);
+    if (benchmark_count > 1) {
+        let avg_benchmark_time: f32 = all_benchmarks.iter().sum::<f32>() / (benchmark_count as f32);
         println!("\n---------------------------------------------------------------");
         println!("Average benchmark time: {}", avg_benchmark_time);
         println!("---------------------------------------------------------------");
